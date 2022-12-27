@@ -1,0 +1,87 @@
+name: Build and upload binaries
+on:
+  release:
+    types: [published]
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    name: Build binaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.x
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build binaries
+        run: |
+          apt install -y libx11-dev
+          cp LICENSE "$RUNNER_TEMP/LICENSE"
+          echo -e "\n---\n" >> "$RUNNER_TEMP/LICENSE"
+          curl -L "https://raw.githubusercontent.com/golang-design/clipboard/main/LICENSE" >> "$RUNNER_TEMP/LICENSE"
+          echo -e "\n---\n" >> "$RUNNER_TEMP/LICENSE"
+          curl -L "https://raw.githubusercontent.com/golang-design/hotkey/main/LICENSE" >> "$RUNNER_TEMP/LICENSE"
+          echo -e "\n---\n" >> "$RUNNER_TEMP/LICENSE"
+          curl -L "https://go.dev/LICENSE?m=text" >> "$RUNNER_TEMP/LICENSE"
+          VERSION="$(git describe --tags)"
+          function build_olaf() {
+            DIR="$(mktemp -d)"
+            mkdir "$DIR/olaf"
+            cp "$RUNNER_TEMP/LICENSE" "$DIR/olaf"
+            go build -o "$DIR/olaf" -ldflags "-X main.Version=$VERSION" -trimpath .
+            if [ "$GOOS" == "windows" ]; then
+              ( cd "$DIR"; zip olaf.zip -r olaf )
+              mv "$DIR/olaf.zip" "olaf-$VERSION-$GOOS-$GOARCH.zip"
+            else
+              tar -cvzf "olaf-$VERSION-$GOOS-$GOARCH.tar.gz" -C "$DIR" olaf
+            fi
+          }
+          GOOS=linux GOARCH=amd64 build_olaf
+          GOOS=darwin GOARCH=amd64 build_olaf
+          GOOS=windows GOARCH=amd64 build_olaf
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: olaf-binaries
+          path: olaf-*
+  upload:
+    name: Upload release binaries
+    if: ${{ github.event_name == 'release' }}
+    needs: build
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: olaf-binaries
+      - name: Upload release artifacts
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require("fs").promises;
+            const { repo: { owner, repo }, sha } = context;
+
+            const release = await github.rest.repos.getReleaseByTag({
+              owner, repo,
+              tag: process.env.GITHUB_REF_NAME,
+            });
+            console.log("Release:", { release });
+
+            for (let file of await fs.readdir(".")) {
+              if (!file.startsWith("olaf-")) continue;
+              console.log("Uploading", file);
+              await github.rest.repos.uploadReleaseAsset({
+                owner, repo,
+                release_id: release.data.id,
+                name: file,
+                data: await fs.readFile(file),
+              });
+            }
