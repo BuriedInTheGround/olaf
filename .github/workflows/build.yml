@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - {GOOS:linux, GOARCH:amd64}
-          - {GOOS:darwin, GOARCH:amd64}
-          - {GOOS:windows, GOARCH:amd64}
+          - {GOOS: linux, GOARCH: amd64}
+          - {GOOS: darwin, GOARCH: amd64}
+          - {GOOS: windows, GOARCH: amd64}
     steps:
       - name: Install Go
         uses: actions/setup-go@v3
