@@ -47,6 +47,7 @@ jobs:
             tar -cvzf "olaf-$VERSION-$GOOS-$GOARCH.tar.gz" -C "$DIR" olaf
           fi
         env:
+          CGO_ENABLED: 1
           GOOS: ${{ matrix.GOOS }}
           GOARCH: ${{ matrix.GOARCH }}
       - name: Upload workflow artifacts
