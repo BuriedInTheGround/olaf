@@ -1,10 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
 	"reflect"
+	"runtime/debug"
 	"strconv"
 	"strings"
 
@@ -13,7 +15,48 @@ import (
 	"golang.design/x/hotkey/mainthread"
 )
 
+const usage = `Usage:
+    olaf [--version]
+
+Options:
+    --version  Print the version and exit.
+
+Upon starting, olaf will register eight different hotkeys. Four hotkeys are
+used to store the content of the system clipboard into a virtual clipboard, and
+the other four are used to get back the content from a virtual clipboard and
+put it into the system clipboard.
+
+The registered hotkeys are Ctrl+<H> and Alt+<H> where <H> is the name of a
+virtual clipboard. There are four virtual clipboards in total: u, i, o, and p.
+
+You will usually want to launch olaf as a background task, especially when
+working with the CLI. If you use a bash-like shell, see the example.
+
+Example:
+    $ olaf &`
+
+var Version string
+
 func main() {
+	flag.Usage = func() { fmt.Fprintf(os.Stderr, "%s\n", usage) }
+
+	var versionFlag bool
+	flag.BoolVar(&versionFlag, "version", false, "print the version")
+	flag.Parse()
+
+	if versionFlag {
+		if Version != "" {
+			fmt.Println(Version)
+			return
+		}
+		if buildInfo, ok := debug.ReadBuildInfo(); ok {
+			fmt.Println(buildInfo.Main.Version)
+			return
+		}
+		fmt.Println("(unknown)")
+		return
+	}
+
 	mainthread.Init(run)
 }
 
@@ -73,6 +116,7 @@ func clipboardName(hotkey *hotkey.Hotkey) string {
 	return fmt.Sprintf("%c", register)
 }
 
+// l is a logger with no prefixes.
 var l = log.New(os.Stderr, "", 0)
 
 func printf(format string, v ...any) {

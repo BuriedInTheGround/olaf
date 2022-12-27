@@ -14,13 +14,13 @@ let
 
     src = ./.;
 
-    ldflags = [ "-s" "-w" ];
+    ldflags = [ "-s" "-w" "-X main.Version=${version}" ];
 
     buildInputs = [ xorg.libX11.dev ];
 
     meta = with lib; {
       homepage = "https://interrato.dev/olaf";
-      description = "A system-wide multi-clipboard system.";
+      description = "A simple multi-clipboard system.";
       license = licenses.bsd3;
     };
   };
