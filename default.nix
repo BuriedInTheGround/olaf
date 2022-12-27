@@ -9,7 +9,7 @@ with pkgs;
 let
   olaf = buildGoModule rec {
     pname = "olaf";
-    version = "(devel)";
+    version = "v1.0.0-beta1";
     vendorSha256 = "sha256-Z5iIG0xXSb5iFbwWbDH7YD5hoX2Pe3TfJ103JX5bXOE=";
 
     src = ./.;
