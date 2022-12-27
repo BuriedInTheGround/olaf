@@ -1,26 +1,26 @@
 # olaf
 
-A system-wide multi-clipboard system.
+A simple multi-clipboard system.
 
 It allows saving the (textual) content of the system clipboard to up-to-four
 virtual clipboards.
 
-<!---
 ## Installation
 
+<!---
 On Windows, Linux, and macOS, you can use [the pre-built binaries].
+-->
 
 If your system has [Go 1.18+], you can build from source.
 ```
 go install interrato.dev/olaf@latest
 ```
--->
 
 ## Usage
 
 The usage is very simple. First, you need to start `olaf`: you can do it
-from CLI or by double-clicking the executable if you're more comfortable this
-way.
+from the CLI or by double-clicking the executable, if you're more comfortable
+this way.
 
 > **Note**
 > When running it using the CLI you may want to run `olaf` as a background
