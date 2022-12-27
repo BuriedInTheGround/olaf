@@ -7,14 +7,15 @@ virtual clipboards.
 
 ## Installation
 
-<!---
-On Windows, Linux, and macOS, you can use [the pre-built binaries].
--->
+On Windows and Linux, you can use [the pre-built binaries].
 
 If your system has [Go 1.18+], you can build from source.
+
 ```
 go install interrato.dev/olaf@latest
 ```
+
+Help from new packagers is very welcome.
 
 ## Usage
 
@@ -26,11 +27,13 @@ this way.
 > When running it using the CLI you may want to run `olaf` as a background
 > task. On bash-like shells, this is usually accomplished by appending the
 > ampersand symbol, like shown in the following example.
+>
 > ```
 > $ olaf &
 > ```
 
 Once `olaf` is running, follow these steps:
+
 1. Copy any text with `Ctrl+c` or with your preferred method
 2. Press `Ctrl+u` to save what you've copied to virtual clipboard `u`
 3. Do your stuff
