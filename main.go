@@ -19,16 +19,16 @@ const usage = `Usage:
 Options:
     --version  Print the version and exit.
 
-Upon starting, olaf will register eight different hotkeys. Four hotkeys are
-used to store the content of the system clipboard into a virtual clipboard, and
-the other four are used to get back the content from a virtual clipboard and
-put it into the system clipboard.
+At startup, olaf registers eight different hotkeys. Four of these hotkeys are
+used to copy the contents of the system clipboard to a virtual clipboard, and
+the other four are used to copy the contents of a virtual clipboard back into
+the system clipboard.
 
-The registered hotkeys are Ctrl+<H> and Alt+<H> where <H> is the name of a
-virtual clipboard. There are four virtual clipboards in total: u, i, o, and p.
+The registered hotkeys are Ctrl+<H> and Alt+<H>, where <H> is the name of one
+of the virtual clipboards. There are four virtual clipboards: u, i, o, and p.
 
-You will usually want to launch olaf as a background task, especially when
-working with the CLI. If you use a bash-like shell, see the example.
+You will usually want to run olaf as a background task, especially if you are
+using the CLI. If you are using a bash-like shell, see the example.
 
 Example:
     $ olaf &`
