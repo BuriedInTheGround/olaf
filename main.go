@@ -116,5 +116,5 @@ func printf(format string, v ...any) {
 }
 
 func errorf(format string, v ...any) {
-	l.Printf("olaf: error: "+format, v...)
+	l.Fatalf("olaf: error: "+format, v...)
 }
