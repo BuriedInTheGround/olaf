@@ -7,8 +7,6 @@ import (
 	"os"
 	"reflect"
 	"runtime/debug"
-	"strconv"
-	"strings"
 
 	"golang.design/x/clipboard"
 	"golang.design/x/hotkey"
@@ -109,12 +107,6 @@ func run() {
 }
 
 type Clipboard []byte
-
-func clipboardName(hotkey *hotkey.Hotkey) string {
-	registerCode, _, _ := strings.Cut(hotkey.String(), "+")
-	register, _ := strconv.Atoi(registerCode)
-	return fmt.Sprintf("%c", register)
-}
 
 // l is a logger with no prefixes.
 var l = log.New(os.Stderr, "", 0)
